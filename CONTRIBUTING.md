@@ -34,7 +34,7 @@ Ikuti langkah-langkah presisi berikut untuk menyiapkan lingkungan pengembangan d
 
 ### Langkah 1: Kloning Repositori
 ```bash
-git clone https://github.com/username/TugasVirtualLab.git
+git clone https://github.com/evantanuri/TugasVirtualLabPWAM.git
 cd TugasVirtualLab
 ```
 

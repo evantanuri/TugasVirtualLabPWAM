@@ -132,7 +132,7 @@ Jalankan proyek di mesin lokal Anda dalam 4 langkah mudah:
 
 ### 1. Kloning Repositori
 ```bash
-git clone https://github.com/username/TugasVirtualLab.git
+git clone https://github.com/evantanuri/TugasVirtualLabPWAM.git
 cd TugasVirtualLab
 ```
 
