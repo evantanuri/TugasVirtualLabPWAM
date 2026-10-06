@@ -3,143 +3,444 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Virtual Lab Fisika TPB ITB — Gerak Parabola & Tembakan Meriam</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="/static/css/components.css">
+  <meta name="description" content="Virtual Lab Fisika TPB ITB — Simulasi Gerak Parabola & Tembakan Meriam (Kinematika 2D) dengan visual Canvas, drag-and-drop amunisi, dan telemetri real-time.">
+  <title>Virtual Lab Fisika TPB ITB — Simulasi Gerak Parabola & Tembakan Meriam</title>
+  <link rel="stylesheet" href="/static/css/style.css" id="themeStylesheet">
+  <link rel="stylesheet" href="/static/css/components.css" id="componentsStylesheet">
+  <script>
+    // Dukungan ketahanan saat dibuka langsung melalui file:// (protokol lokal)
+    if (window.location.protocol === 'file:') {
+      document.getElementById('themeStylesheet').href = '../src/static/css/style.css';
+      document.getElementById('componentsStylesheet').href = '../src/static/css/components.css';
+    }
+  </script>
 </head>
 <body>
   <div class="app-container">
-    <!-- Header Semantik -->
+    <!-- Header Semantik Aplikasi -->
     <header class="app-header">
       <div class="header-brand">
         <span class="badge-tpb">TPB ITB</span>
-        <h1>Virtual Lab Fisika Dasar: Kinematika 2D</h1>
+        <div class="header-title-wrapper">
+          <h1>Virtual Lab Fisika Dasar: Kinematika 2D</h1>
+          <span class="header-subtitle">Simulasi Gerak Parabola & Tembakan Meriam Klasik</span>
+        </div>
       </div>
-      <div class="header-actions">
-        <button id="btnHelp" class="btn btn--outline" aria-label="Buka Panduan Lab">Panduan Lab</button>
-        <button id="btnChallenge" class="btn btn--accent" aria-label="Mulai Mode Tantangan">Mode Tantangan Benteng</button>
-      </div>
+      <nav class="header-nav" aria-label="Navigasi Bantuan dan Mode Simulasi">
+        <button type="button" id="btnHelp" class="btn btn--outline" aria-label="Buka Panduan Eksperimen Virtual Lab" title="Panduan praktikum & rumus kinematika">
+          <span class="btn-icon">📖</span> Panduan Lab
+        </button>
+        <button type="button" id="btnChallenge" class="btn btn--accent" aria-label="Buka Mode Tantangan Benteng Sasaran" title="Tantangan tembakan benteng sasaran">
+          <span class="btn-icon">🎯</span> Mode Tantangan
+        </button>
+        <button type="button" id="btnClearTrails" class="btn btn--outline" aria-label="Bersihkan Jejak Lintasan Parabola" title="Hapus seluruh jejak kurva parabola dari layar">
+          <span class="btn-icon">🧹</span> Hapus Jejak
+        </button>
+      </nav>
     </header>
 
     <!-- Konten Utama Semantik -->
     <main class="lab-main">
-      <!-- Area Visualisasi Canvas 2D -->
-      <section class="viewport-section" aria-label="Simulasi Visual Canvas">
-        <div class="canvas-wrapper">
-          <canvas id="simCanvas" width="960" height="540"></canvas>
-          
-          <!-- Drop Zone Overlay untuk Drag & Drop amunisi / sasaran -->
-          <div id="cannonDropZone" class="drop-zone drop-zone--cannon" title="Lepaskan amunisi ke moncong meriam">
-            <span class="drop-hint">Drop Amunisi</span>
-          </div>
-        </div>
+      <!-- Section 1: Viewport Simulasi Visual, Telemetri, dan Tabel Riwayat Percobaan -->
+      <section class="viewport-section" aria-labelledby="simHeading">
+        <h2 id="simHeading" class="sr-only">Area Simulasi Visual Canvas dan Telemetri</h2>
 
-        <!-- Telemetri HUD Strip -->
-        <div class="telemetry-bar" id="telemetryHUD">
+        <!-- Figure Semantik Pembungkus Canvas 2D -->
+        <figure class="canvas-container">
+          <div class="canvas-wrapper">
+            <canvas id="simCanvas" width="960" height="540" role="img" aria-label="Simulasi visual 2D gerak parabola tembakan meriam menuju benteng teal"></canvas>
+
+            <!-- Drop Zone Overlay HTML5 Drag & Drop untuk Moncong Meriam -->
+            <div id="cannonDropZone" class="drop-zone drop-zone--cannon" role="region" aria-label="Zona Pemuatan Amunisi Moncong Meriam" title="Lepaskan (drop) peluru dari rak amunisi ke sini untuk memuat meriam">
+              <div class="drop-zone-indicator">
+                <span class="drop-zone-icon">🎯</span>
+                <span class="drop-hint">Drop Amunisi</span>
+              </div>
+            </div>
+
+            <!-- Draggable Castle Target Flag / Marker -->
+            <div id="targetDraggable" class="target-widget" draggable="true" role="button" tabindex="0" title="Geser (drag) bendera ini secara horizontal untuk mengubah posisi benteng sasaran" aria-label="Bendera Sasaran Benteng (Dapat Digeser)">
+              <span class="target-icon">🚩</span>
+              <span class="target-label" id="targetWidgetLabel">Benteng: 210m</span>
+            </div>
+          </div>
+          <figcaption class="canvas-caption">
+            Visualisasi proyektil 2D meriam klasik beroda kayu, bukit perbukitan, benteng teal bermerlon, dan kurva parabola analitik.
+          </figcaption>
+        </figure>
+
+        <!-- Dashboard Telemetri Real-Time HUD (Aria-Live Polite untuk Aksesibilitas) -->
+        <section class="telemetry-bar" id="telemetryHUD" aria-live="polite" aria-label="Telemetri Penerbangan Proyektil Seketika">
           <div class="telemetry-item">
-            <span class="telemetry-label">Waktu (t):</span>
+            <span class="telemetry-label">Waktu (t)</span>
             <span class="telemetry-val" id="hudTime">0.00 s</span>
           </div>
           <div class="telemetry-item">
-            <span class="telemetry-label">Posisi (x, y):</span>
+            <span class="telemetry-label">Posisi (x, y)</span>
             <span class="telemetry-val" id="hudPos">(0.0, 0.0) m</span>
           </div>
           <div class="telemetry-item">
-            <span class="telemetry-label">Kecepatan (v):</span>
+            <span class="telemetry-label">Kecepatan (v)</span>
             <span class="telemetry-val" id="hudSpeed">0.0 m/s</span>
           </div>
           <div class="telemetry-item">
-            <span class="telemetry-label">H Maks (h_max):</span>
+            <span class="telemetry-label">Tinggi Maks (h_max)</span>
             <span class="telemetry-val" id="hudHMax">0.0 m</span>
           </div>
           <div class="telemetry-item">
-            <span class="telemetry-label">Jarak Tempuh (R):</span>
+            <span class="telemetry-label">Jarak Tempuh (R)</span>
             <span class="telemetry-val" id="hudRange">0.0 m</span>
           </div>
-        </div>
+          <div class="telemetry-item telemetry-item--status">
+            <span class="telemetry-label">Status Balistik</span>
+            <span class="telemetry-val" id="hudStatus">
+              <span class="status-badge status-badge--ready" id="hudStatusBadge">SIAP</span>
+            </span>
+          </div>
+        </section>
+
+        <!-- Section Riwayat Eksperimen & Tabel Data Praktikum Formal -->
+        <section class="panel-card experiment-history-section" aria-labelledby="historyHeading">
+          <div class="history-header">
+            <div class="history-title-wrapper">
+              <h2 id="historyHeading" class="card-title">📊 Riwayat Percobaan Praktikum Kinematika</h2>
+              <p class="card-subtitle">Data telemetri tersimpan lokal secara real-time dan siap diekspor untuk laporan resmi praktikum TPB.</p>
+            </div>
+            <div class="history-actions">
+              <button type="button" id="btnExportCSV" class="btn btn--secondary btn--sm" title="Unduh dataset riwayat praktikum dalam format CSV ramah Excel (UTF-8 BOM)">
+                📥 Ekspor CSV
+              </button>
+              <button type="button" id="btnExportJSON" class="btn btn--secondary btn--sm" title="Unduh dataset riwayat praktikum sesuai skema formal LabExperimentSession JSON">
+                📋 Ekspor JSON
+              </button>
+              <button type="button" id="btnClearTable" class="btn btn--outline btn--sm" title="Kosongkan seluruh baris tabel riwayat percobaan">
+                🗑️ Bersihkan Tabel
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabel Data Semantik Formal Sesuai Rubrik Dosen -->
+          <div class="table-responsive">
+            <table id="trialsTable" class="experiment-table">
+              <caption>Tabel Pengukuran Kinematika 2D TPB ITB (Perbandingan Hasil Simulasi Numerik vs. Solusi Analitik)</caption>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">v₀ (m/s)</th>
+                  <th scope="col">θ (°)</th>
+                  <th scope="col">y₀ (m)</th>
+                  <th scope="col">g (m/s²)</th>
+                  <th scope="col">Amunisi</th>
+                  <th scope="col">R Sim (m)</th>
+                  <th scope="col">R Teori (m)</th>
+                  <th scope="col">Galat (%)</th>
+                  <th scope="col">h_max (m)</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="trialsTableBody">
+                <tr id="emptyTableRow">
+                  <td colspan="11" class="empty-table-cell">
+                    Belum ada data percobaan. Muat amunisi ke moncong meriam lalu tekan tombol "🚀 TEMBAK" untuk memulai eksperimen.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </section>
 
-      <!-- Sidebar Kontrol & Rak Amunisi Drag-and-Drop -->
-      <aside class="control-sidebar" aria-label="Panel Kontrol dan Amunisi">
-        <!-- Rak Amunisi (HTML5 Drag & Drop) -->
-        <div class="panel-card armory-card">
-          <h2 class="card-title">Rak Amunisi (Drag & Drop)</h2>
-          <p class="card-subtitle">Drag peluru berikut ke moncong meriam untuk memuat:</p>
-          <div class="ammo-shelf" id="ammoShelf">
-            <div class="ammo-item" draggable="true" data-type="iron" title="Peluru Besi Standar (Massa: 10 kg)">
+      <!-- Section 2: Sidebar Kontrol, Rak Amunisi, dan Form Parameter Balistik -->
+      <aside class="control-sidebar" aria-label="Panel Kontrol Parameter Balistik dan Rak Amunisi">
+        <!-- Rak Amunisi (Native HTML5 Drag & Drop API & Mobile Tap Fallback) -->
+        <section class="panel-card armory-card" aria-labelledby="armoryHeading">
+          <div class="card-header-row">
+            <h2 id="armoryHeading" class="card-title">Rak Amunisi (Drag & Drop)</h2>
+            <span class="card-tag">HTML5 DND</span>
+          </div>
+          <p class="card-subtitle">Drag salah satu peluru ke moncong meriam di canvas, atau tap langsung untuk memuat:</p>
+
+          <div class="ammo-shelf" id="ammoShelf" role="list">
+            <!-- Amunisi 1: Besi Standar -->
+            <div class="ammo-item" draggable="true" role="listitem" tabindex="0" data-type="iron" data-name="Besi" data-mass="10.0" data-cd="0.47" data-radius="0.15" title="Peluru Besi Standar (Massa: 10 kg, Cd: 0.47, Radius: 0.15 m)">
               <div class="ammo-icon ammo-icon--iron"></div>
-              <span>Besi (10kg)</span>
+              <div class="ammo-details">
+                <span class="ammo-name">Besi</span>
+                <span class="ammo-spec">10 kg • r=0.15m</span>
+              </div>
             </div>
-            <div class="ammo-item" draggable="true" data-type="lead" title="Peluru Timbal Berat (Massa: 25 kg)">
+
+            <!-- Amunisi 2: Timbal Berat -->
+            <div class="ammo-item" draggable="true" role="listitem" tabindex="0" data-type="lead" data-name="Timbal" data-mass="25.0" data-cd="0.47" data-radius="0.12" title="Peluru Timbal Berat (Massa: 25 kg, Inersia Tinggi, Hambatan Rendah)">
               <div class="ammo-icon ammo-icon--lead"></div>
-              <span>Timbal (25kg)</span>
+              <div class="ammo-details">
+                <span class="ammo-name">Timbal</span>
+                <span class="ammo-spec">25 kg • r=0.12m</span>
+              </div>
             </div>
-            <div class="ammo-item" draggable="true" data-type="light" title="Peluru Ringan (Massa: 2 kg)">
+
+            <!-- Amunisi 3: Ringan Uji -->
+            <div class="ammo-item" draggable="true" role="listitem" tabindex="0" data-type="light" data-name="Ringan" data-mass="2.0" data-cd="0.47" data-radius="0.18" title="Peluru Ringan Uji (Massa: 2 kg, Sangat Sensitif Terhadap Gesekan Udara)">
               <div class="ammo-icon ammo-icon--light"></div>
-              <span>Ringan (2kg)</span>
+              <div class="ammo-details">
+                <span class="ammo-name">Ringan</span>
+                <span class="ammo-spec">2 kg • r=0.18m</span>
+              </div>
             </div>
           </div>
-          <div class="ammo-status" id="ammoStatus">Status: <span class="status-badge">Belum Dimuat</span></div>
-        </div>
 
-        <!-- Kontrol Parameter Balistik -->
-        <div class="panel-card controls-card">
-          <h2 class="card-title">Parameter Balistik</h2>
-
-          <div class="control-group">
-            <div class="control-label-row">
-              <label for="sliderAngle">Sudut Elevasi (θ):</label>
-              <span class="val-display" id="valAngle">45°</span>
+          <!-- Indikator Status Amunisi & Alert Umpan Balik -->
+          <div class="ammo-status-container">
+            <div class="ammo-status" id="ammoStatus">
+              <span class="ammo-status-label">Status Amunisi:</span>
+              <span class="status-badge status-badge--empty" id="ammoStatusBadge">Belum Dimuat</span>
             </div>
-            <input type="range" id="sliderAngle" min="0" max="90" value="45" step="1">
-          </div>
-
-          <div class="control-group">
-            <div class="control-label-row">
-              <label for="sliderVelocity">Kecepatan Awal (v₀):</label>
-              <span class="val-display" id="valVelocity">45 m/s</span>
+            <!-- Alert Peringatan Tembak Tanpa Amunisi -->
+            <div class="ammo-alert hidden" id="ammoAlert" role="alert" aria-live="assertive">
+              <span class="ammo-alert-icon">⚠️</span>
+              <span class="ammo-alert-text">Meriam belum terisi amunisi! Drag atau tap peluru pada rak di atas sebelum menembak.</span>
             </div>
-            <input type="range" id="sliderVelocity" min="5" max="90" value="45" step="1">
+          </div>
+        </section>
+
+        <!-- Form Kontrol Parameter Balistik & Slider -->
+        <form class="panel-card controls-card" id="controlsForm" onsubmit="return false;" aria-labelledby="controlsHeading">
+          <div class="card-header-row">
+            <h2 id="controlsHeading" class="card-title">Parameter Balistik</h2>
+            <span class="card-tag">Kinematika 2D</span>
           </div>
 
-          <div class="control-group">
-            <div class="control-label-row">
-              <label for="sliderHeight">Ketinggian Meriam (y₀):</label>
-              <span class="val-display" id="valHeight">0 m</span>
+          <!-- Fieldset 1: Parameter Peluncuran -->
+          <fieldset class="control-fieldset">
+            <legend class="control-legend">Pengaturan Elevasi & Kecepatan</legend>
+
+            <!-- Slider Sudut Elevasi (θ) -->
+            <div class="control-group">
+              <div class="control-label-row">
+                <label for="sliderAngle">Sudut Elevasi (θ):</label>
+                <output for="sliderAngle" class="val-display" id="valAngle">45°</output>
+              </div>
+              <input type="range" id="sliderAngle" min="0" max="90" value="45" step="1" aria-valuemin="0" aria-valuemax="90" aria-valuenow="45" aria-describedby="valAngle">
+              <div class="range-ticks">
+                <span>0°</span>
+                <span>30°</span>
+                <span>45°</span>
+                <span>60°</span>
+                <span>90°</span>
+              </div>
             </div>
-            <input type="range" id="sliderHeight" min="0" max="40" value="0" step="1">
-          </div>
 
-          <div class="control-group">
-            <label for="selectGravity">Lingkungan Gravitasi (g):</label>
-            <select id="selectGravity" class="form-select">
-              <option value="9.81" selected>Bumi (9.81 m/s²)</option>
-              <option value="1.62">Bulan (1.62 m/s²)</option>
-              <option value="3.71">Mars (3.71 m/s²)</option>
-              <option value="24.79">Jupiter (24.79 m/s²)</option>
-            </select>
-          </div>
+            <!-- Slider Kecepatan Awal (v₀) -->
+            <div class="control-group">
+              <div class="control-label-row">
+                <label for="sliderVelocity">Kecepatan Awal (v₀):</label>
+                <output for="sliderVelocity" class="val-display" id="valVelocity">45 m/s</output>
+              </div>
+              <input type="range" id="sliderVelocity" min="0" max="100" value="45" step="1" aria-valuemin="0" aria-valuemax="100" aria-valuenow="45" aria-describedby="valVelocity">
+              <div class="range-ticks">
+                <span>0</span>
+                <span>25</span>
+                <span>50</span>
+                <span>75</span>
+                <span>100 m/s</span>
+              </div>
+            </div>
 
-          <!-- Tombol Aksi Utama -->
+            <!-- Slider Ketinggian Moncong Awal (y₀) -->
+            <div class="control-group">
+              <div class="control-label-row">
+                <label for="sliderHeight">Ketinggian Awal (y₀):</label>
+                <output for="sliderHeight" class="val-display" id="valHeight">0 m</output>
+              </div>
+              <input type="range" id="sliderHeight" min="0" max="50" value="0" step="1" aria-valuemin="0" aria-valuemax="50" aria-valuenow="0" aria-describedby="valHeight">
+              <div class="range-ticks">
+                <span>0m (Permukaan)</span>
+                <span>25m</span>
+                <span>50m (Menara)</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset 2: Lingkungan Gravitasi & Target Sasaran -->
+          <fieldset class="control-fieldset">
+            <legend class="control-legend">Lingkungan Gravitasi & Sasaran</legend>
+
+            <!-- Preset Gravitasi -->
+            <div class="control-group">
+              <div class="control-label-row">
+                <label for="selectGravity">Percepatan Gravitasi (g):</label>
+                <output for="selectGravity" class="val-display" id="valGravityDisplay">9.81 m/s²</output>
+              </div>
+              <select id="selectGravity" class="form-select">
+                <option value="9.81" selected>Bumi (g = 9.81 m/s²)</option>
+                <option value="1.62">Bulan (g = 1.62 m/s²)</option>
+                <option value="3.71">Mars (g = 3.71 m/s²)</option>
+                <option value="24.79">Jupiter (g = 24.79 m/s²)</option>
+                <option value="custom">Kustom Gravitasi...</option>
+              </select>
+            </div>
+
+            <!-- Input Slider Gravitasi Kustom (Tersembunyi jika preset aktif) -->
+            <div class="control-group hidden" id="customGravityGroup">
+              <div class="control-label-row">
+                <label for="sliderCustomGravity">Nilai Gravitasi Kustom:</label>
+                <output for="sliderCustomGravity" class="val-display" id="valCustomGravity">9.81 m/s²</output>
+              </div>
+              <input type="range" id="sliderCustomGravity" min="0.5" max="25" step="0.1" value="9.81" aria-valuemin="0.5" aria-valuemax="25" aria-valuenow="9.81">
+            </div>
+
+            <!-- Jarak Benteng Target Sasaran (R_target) -->
+            <div class="control-group">
+              <div class="control-label-row">
+                <label for="sliderTarget">Jarak Benteng Sasaran (R_target):</label>
+                <output for="sliderTarget" class="val-display" id="valTarget">210 m</output>
+              </div>
+              <input type="range" id="sliderTarget" min="50" max="250" value="210" step="1" aria-valuemin="50" aria-valuemax="250" aria-valuenow="210" aria-describedby="valTarget">
+              <div class="range-ticks">
+                <span>50m</span>
+                <span>100m</span>
+                <span>150m</span>
+                <span>200m</span>
+                <span>250m</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Akordeon Semantik Details & Summary: Hambatan Fluida Udara -->
+          <details class="aerodynamics-accordion" id="detailsAerodynamics">
+            <summary class="aerodynamics-summary">
+              <span class="summary-icon">⚙️</span>
+              <span class="summary-title">Opsi Hambatan Fluida Udara (Aerodinamika)</span>
+            </summary>
+            <div class="aerodynamics-content">
+              <label class="checkbox-container">
+                <input type="checkbox" id="checkAirResistance">
+                <span class="checkmark"></span>
+                <span class="checkbox-label">Aktifkan Gesekan Udara (Gaya Hambat Kuadratik F_d)</span>
+              </label>
+
+              <div class="control-group hidden" id="dragCoeffGroup">
+                <div class="control-label-row">
+                  <label for="sliderDragCoeff">Koefisien Hambatan (C_d):</label>
+                  <output for="sliderDragCoeff" class="val-display" id="valDragCoeff">0.47</output>
+                </div>
+                <input type="range" id="sliderDragCoeff" min="0.1" max="1.5" step="0.01" value="0.47" aria-valuemin="0.1" aria-valuemax="1.5" aria-valuenow="0.47">
+                <small class="field-hint">Referensi: 0.47 = Bola Halus, 0.20 = Proyektil Runcing, 1.05 = Silinder Datar</small>
+              </div>
+            </div>
+          </details>
+
+          <!-- Tombol Aksi Utama Simulasi -->
           <div class="action-btn-group">
-            <button id="btnFire" class="btn btn--primary btn--large">🚀 TEMBAK</button>
-            <button id="btnPause" class="btn btn--secondary">Jeda</button>
-            <button id="btnReset" class="btn btn--outline">Reset</button>
+            <button type="button" id="btnFire" class="btn btn--primary btn--large" title="Luncurkan proyektil meriam menuju target">
+              <span class="btn-icon">🚀</span> TEMBAK
+            </button>
+            <button type="button" id="btnPause" class="btn btn--secondary" title="Jeda atau lanjutkan simulasi yang sedang berjalan">
+              <span class="btn-icon">⏸️</span> Jeda
+            </button>
+            <button type="button" id="btnReset" class="btn btn--outline" title="Reset posisi meriam dan bersihkan telemetri aktif">
+              <span class="btn-icon">🔄</span> Atur Ulang
+            </button>
           </div>
-        </div>
+        </form>
       </aside>
     </main>
 
-    <!-- Footer Semantik -->
+    <!-- Footer Semantik Aplikasi -->
     <footer class="app-footer">
-      <p>Praktikum Virtual Kinematika 2D — Tugas TPB ITB © 2026. Dioptimalkan untuk Standar HTML5 Canvas & Python Flask.</p>
+      <div class="footer-content">
+        <p class="footer-primary">
+          <strong>Virtual Lab Fisika Dasar TPB ITB © 2026</strong> — Modul Kinematika 2D (Gerak Parabola & Tembakan Meriam).
+        </p>
+        <p class="footer-secondary">
+          Dibangun dengan Semantic HTML5, CSS3 Glassmorphism, Native HTML5 Drag & Drop, Canvas 2D 60 FPS, dan Python Flask Middleware.
+        </p>
+      </div>
     </footer>
   </div>
 
-  <!-- Modal Component Included -->
-  {% include 'components/modal.html' ignore missing %}
+  <!-- =========================================================================
+       MODAL KOMPONEN INLINE RESILIEN (Bebas dari Ketergantungan Jinja Syntax)
+       Menjamin file dapat dirender 100% sempurna baik melalui Flask maupun Static
+       ========================================================================= -->
 
-  <!-- Client-side Scripts -->
+  <!-- Modal 1: Panduan Lab & Landasan Teori Fisika -->
+  <div id="labModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-badge">TPB ITB</span>
+          <h3 id="modalTitle" class="modal-title">Panduan Eksperimen Virtual Lab</h3>
+        </div>
+        <button type="button" id="modalClose" class="modal-close-btn" aria-label="Tutup Dialog Panduan">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <h4>1. Tujuan Pembelajaran</h4>
+        <ul class="modal-list">
+          <li>Menganalisis dekomposisi vektor kecepatan awal: \(v_{0x} = v_0 \cos\theta\) dan \(v_{0y} = v_0 \sin\theta\).</li>
+          <li>Menguji validitas rumus analitik jangkauan terjauh \(R = \frac{v_0^2 \sin(2\theta)}{g}\) dan tinggi puncak \(h_{\max} = y_0 + \frac{v_{0y}^2}{2g}\).</li>
+          <li>Mengamati deviasi gerak ketika pengaruh hambatan udara fluida diaktifkan.</li>
+        </ul>
+
+        <h4>2. Panduan Interaktivitas</h4>
+        <ul class="modal-list">
+          <li><strong>Pemuatan Amunisi:</strong> Tarik (drag) kartu amunisi dari Rak Amunisi ke moncong meriam, atau ketuk (tap) kartu peluru langsung untuk memuat meriam.</li>
+          <li><strong>Pengaturan Sudut & Kecepatan:</strong> Gunakan slider sudut elevasi \(\theta\) dan kecepatan awal \(v_0\). Laras meriam akan berputar secara dinamis.</li>
+          <li><strong>Mengubah Posisi Sasaran:</strong> Drag bendera sasaran pada kanvas atau atur slider jarak benteng.</li>
+          <li><strong>Ekspor Laporan:</strong> Simpan hasil pengujian dengan tombol <em>Ekspor CSV</em> atau <em>Ekspor JSON</em> di bagian bawah tabel percobaan.</li>
+        </ul>
+
+        <h4>3. Toleransi Target Benteng</h4>
+        <p>Tembakan dinyatakan <strong>HIT (Mengenai Sasaran)</strong> apabila proyektil menabrak batas dinding benteng sasaran teal dalam radius toleransi benturan \(\pm 5\text{ m}\).</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modalActionBtn" class="btn btn--primary">Mengerti & Mulai Praktikum</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Mode Tantangan Benteng Sasaran -->
+  <div id="challengeModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="challengeModalTitle">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-badge modal-badge--accent">CHALLENGE</span>
+          <h3 id="challengeModalTitle" class="modal-title">Tantangan Balistik Benteng Sasaran</h3>
+        </div>
+        <button type="button" id="challengeModalClose" class="modal-close-btn" aria-label="Tutup Dialog Tantangan">&times;</button>
+      </div>
+      <div class="modal-body" id="challengeModalBody">
+        <p class="challenge-desc">
+          Buktikan keahlian kinematika Anda! Hitung dan atur elevasi sudut \(\theta\) dan kecepatan awal \(v_0\) agar proyektil meriam tepat menghancurkan puncak benteng sasaran.
+        </p>
+
+        <div class="challenge-target-card">
+          <div class="challenge-stat">
+            <span class="challenge-stat-label">Jarak Target Benteng:</span>
+            <span class="challenge-stat-val" id="challengeTargetDist">210.0 m</span>
+          </div>
+          <div class="challenge-stat">
+            <span class="challenge-stat-label">Tinggi Dinding Benteng:</span>
+            <span class="challenge-stat-val">40.0 m</span>
+          </div>
+          <div class="challenge-stat">
+            <span class="challenge-stat-label">Radius Toleransi:</span>
+            <span class="challenge-stat-val">± 5.0 m</span>
+          </div>
+        </div>
+
+        <div class="challenge-tip">
+          💡 <strong>Petunjuk Teori:</strong> Pada permukaan datar (\(y_0 = 0\)), jangkauan maksimum teoretis dicapai pada sudut \(\theta = 45^\circ\). Untuk target bertingkat tinggi, sudut optimum berada di atas \(45^\circ\).
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="challengeRandomizeBtn" class="btn btn--secondary">Acak Posisi Benteng</button>
+        <button type="button" id="challengeStartBtn" class="btn btn--accent">Mulai Tembakan Tantangan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Scripts ES6 Modules -->
   <script type="module" src="/static/js/main.js"></script>
 </body>
 </html>

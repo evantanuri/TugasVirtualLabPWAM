@@ -1,97 +1,161 @@
 /* ==========================================================================
-   COMPONENTS.CSS — Komponen UI: Panel Kontrol, HUD Telemetri, Drag-and-Drop, Modal
+   COMPONENTS.CSS — Komponen Antarmuka Virtual Lab Fisika TPB ITB
+   Mencakup: Glassmorphism Cards, HTML5 Drag & Drop, Sliders, Telemetri HUD,
+   Tabel Riwayat Eksperimen, dan Modal Resilien Bebas Jinja.
    ========================================================================== */
 
-/* Buttons */
+/* ==========================================================================
+   TOMBOL & KONTROL AKSI (BUTTONS)
+   ========================================================================== */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.95rem;
+  gap: 0.45rem;
+  padding: 0.6rem 1.15rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  user-select: none;
+  min-height: 42px;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.btn-icon {
+  font-size: 1.05em;
+  line-height: 1;
 }
 
 .btn--primary {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: #ffffff;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
 }
 
 .btn--primary:hover {
-  background-color: var(--primary-hover);
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #024b75 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(2, 132, 199, 0.35);
+}
+
+.btn--primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.2);
 }
 
 .btn--secondary {
-  background-color: #64748b;
+  background-color: #475569;
   color: #ffffff;
 }
 
 .btn--secondary:hover {
-  background-color: #475569;
+  background-color: #334155;
+  transform: translateY(-1px);
 }
 
 .btn--accent {
-  background-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
   color: #ffffff;
+  box-shadow: 0 4px 10px rgba(217, 119, 6, 0.25);
 }
 
 .btn--accent:hover {
-  background-color: var(--accent-hover);
+  background: linear-gradient(135deg, var(--accent-hover) 0%, #92400e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(217, 119, 6, 0.35);
 }
 
 .btn--outline {
   background-color: transparent;
-  border-color: #cbd5e1;
-  color: #475569;
+  border-color: var(--border-color);
+  color: var(--text-muted);
 }
 
 .btn--outline:hover {
-  background-color: #f1f5f9;
+  background-color: var(--bg-primary);
   border-color: #94a3b8;
+  color: var(--text-main);
+}
+
+.btn--sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.825rem;
+  min-height: 34px;
 }
 
 .btn--large {
-  padding: 0.85rem 1.5rem;
-  font-size: 1.1rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-height: 48px;
+  letter-spacing: 0.02em;
 }
 
-/* Sidebar & Panels */
-.control-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
+/* ==========================================================================
+   PANEL CARDS & GLASSMORPHISM SURFACES
+   ========================================================================== */
 
 .panel-card {
-  background-color: var(--bg-surface);
-  border-radius: var(--border-radius);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: box-shadow var(--transition-normal);
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card-title {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.25rem;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
 .card-subtitle {
   font-size: 0.825rem;
-  color: #64748b;
-  margin-bottom: 0.75rem;
+  color: var(--text-subtle);
+  line-height: 1.4;
 }
 
-/* HTML5 Drag & Drop Shelf */
+.card-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--primary-subtle);
+  color: var(--primary-hover);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   NATIVE HTML5 DRAG & DROP: RAK AMUNISI & DROP ZONE
+   ========================================================================== */
+
 .ammo-shelf {
   display: flex;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  align-items: stretch;
 }
 
 .ammo-item {
@@ -99,224 +163,822 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.75rem 0.5rem;
-  background-color: #f8fafc;
-  border: 2px dashed #cbd5e1;
-  border-radius: 8px;
+  justify-content: center;
+  padding: 0.85rem 0.5rem;
+  background-color: var(--bg-surface);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
   cursor: grab;
   user-select: none;
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.ammo-item:active {
-  cursor: grabbing;
-  opacity: 0.6;
+  -webkit-user-select: none;
+  transition: all var(--transition-fast);
+  text-align: center;
+  position: relative;
+  touch-action: manipulation;
 }
 
 .ammo-item:hover {
   border-color: var(--primary);
-  background-color: #f0f9ff;
+  background-color: var(--primary-subtle);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(2, 132, 199, 0.15);
+}
+
+.ammo-item:active {
+  cursor: grabbing;
+  transform: scale(0.97);
+}
+
+.ammo-item.is-dragging {
+  opacity: 0.45;
+  border-color: var(--accent);
+  transform: scale(0.95);
+}
+
+.ammo-item.is-selected {
+  border-color: var(--success);
+  border-style: solid;
+  background-color: var(--success-subtle);
 }
 
 .ammo-icon {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.45rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform var(--transition-fast);
 }
 
-.ammo-icon--iron { background-color: #334155; }
-.ammo-icon--lead { background-color: #0f172a; }
-.ammo-icon--light { background-color: #94a3b8; }
+.ammo-item:hover .ammo-icon {
+  transform: scale(1.1);
+}
+
+.ammo-icon--iron {
+  background: radial-gradient(circle at 35% 35%, #718096, #2d3748 70%);
+  border: 1px solid #1a202c;
+}
+
+.ammo-icon--lead {
+  background: radial-gradient(circle at 35% 35%, #4a5568, #0f172a 70%);
+  border: 1px solid #000000;
+}
+
+.ammo-icon--light {
+  background: radial-gradient(circle at 35% 35%, #e2e8f0, #94a3b8 70%);
+  border: 1px solid #64748b;
+}
+
+.ammo-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.ammo-name {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.ammo-spec {
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Status Amunisi */
+.ammo-status-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.25rem;
+}
 
 .ammo-status {
-  font-size: 0.825rem;
-  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.4rem 0.65rem;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-sm);
 }
 
 .status-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.775rem;
   font-weight: 700;
-  color: var(--primary);
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-/* Drop Zone */
-.drop-zone {
+.status-badge--empty {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.status-badge--loaded {
+  background-color: var(--success-subtle);
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  animation: badgePop 0.3s ease-out;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.8); }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Alert Peringatan Tembak Tanpa Amunisi */
+.ammo-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--danger-subtle);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #991b1b;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.ammo-alert.hidden {
+  display: none;
+}
+
+.ammo-alert.alert-shake,
+.ammo-shelf.alert-shake {
+  animation: alertShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes alertShake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* ==========================================================================
+   DROP ZONE PADA CANVAS & WIDGET SASARAN
+   ========================================================================== */
+
+.drop-zone--cannon {
   position: absolute;
   bottom: 12%;
   left: 6%;
-  width: 90px;
-  height: 90px;
-  border: 2px dashed rgba(2, 132, 199, 0.4);
+  width: 96px;
+  height: 96px;
+  border: 2px dashed rgba(2, 132, 199, 0.5);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: all;
-  transition: all 0.2s;
+  pointer-events: auto;
+  transition: all var(--transition-fast);
+  background: rgba(2, 132, 199, 0.06);
 }
 
-.drop-zone.drag-over {
-  border-color: var(--success);
-  background-color: rgba(16, 185, 129, 0.2);
-  transform: scale(1.1);
+.drop-zone-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.drop-zone-icon {
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 .drop-hint {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: var(--primary);
-  text-align: center;
-  display: none;
+  color: var(--primary-hover);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
 }
 
-.drop-zone:hover .drop-hint,
-.drop-zone.drag-over .drop-hint {
-  display: block;
+.drop-zone--cannon:hover,
+.drop-zone--cannon.drag-over,
+.drop-zone--cannon.drop-zone--active {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.22);
+  transform: scale(1.12);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+  animation: dropPulse 1.2s infinite alternate;
 }
 
-/* Form Controls & Sliders */
+@keyframes dropPulse {
+  0% { border-color: var(--success); box-shadow: 0 0 6px rgba(16, 185, 129, 0.3); }
+  100% { border-color: #059669; box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+}
+
+/* Target Draggable Flag Widget */
+.target-widget {
+  position: absolute;
+  bottom: 15%;
+  right: 18%;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(29, 95, 111, 0.9);
+  color: #ffffff;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: ew-resize;
+  user-select: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+  z-index: 10;
+}
+
+.target-widget:hover {
+  background: var(--castle-highlight);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.target-widget:active {
+  cursor: grabbing;
+}
+
+.target-icon {
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   FORM KONTROL PARAMETER & SLIDERS
+   ========================================================================== */
+
+.control-fieldset {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.control-legend {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+  padding: 0 0.45rem;
+}
+
 .control-group {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.control-group.hidden {
+  display: none;
 }
 
 .control-label-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 0.35rem;
-  color: #334155;
+  color: var(--text-main);
 }
 
 .val-display {
   color: var(--primary);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background-color: var(--primary-subtle);
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
 }
 
+/* Custom Range Slider */
 input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 6px;
-  background: #e2e8f0;
+  background: #cbd5e1;
   border-radius: 3px;
   outline: none;
-  accent-color: var(--primary);
+  margin: 0.4rem 0 0.15rem 0;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+input[type="range"]:hover {
+  background: #94a3b8;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--primary-hover);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  background: var(--primary-hover);
+}
+
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+
+.range-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.675rem;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
 }
 
 .form-select {
   width: 100%;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
-  background-color: #ffffff;
-  font-size: 0.9rem;
-  color: #334155;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  font-size: 0.875rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color var(--transition-fast);
+  cursor: pointer;
 }
 
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+/* Akordeon Semantik Details & Summary */
+.aerodynamics-accordion {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+
+.aerodynamics-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--bg-surface);
+  transition: background-color var(--transition-fast);
+}
+
+.aerodynamics-summary:hover {
+  background-color: var(--bg-primary);
+}
+
+.aerodynamics-content {
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background-color: rgba(248, 250, 252, 0.7);
+  border-top: 1px solid var(--border-light);
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.field-hint {
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+  line-height: 1.3;
+}
+
+/* Tombol Aksi */
 .action-btn-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
 }
 
 .action-btn-group .btn--primary {
   grid-column: span 2;
 }
 
-/* Telemetry HUD Bar */
+/* ==========================================================================
+   TELEMETRI HUD BAR STRIP
+   ========================================================================== */
+
 .telemetry-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 0.75rem;
-  background-color: var(--bg-surface);
-  border: 1px solid #e2e8f0;
-  border-radius: var(--border-radius);
-  padding: 0.75rem 1.25rem;
-  box-shadow: var(--shadow-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 1.25rem;
+  box-shadow: var(--glass-shadow);
 }
 
 .telemetry-item {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 
 .telemetry-label {
-  font-size: 0.725rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--text-subtle);
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .telemetry-val {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
-/* Modal Overlay */
+.status-badge--ready {
+  background-color: var(--primary-subtle);
+  color: var(--primary-hover);
+}
+
+.status-badge--firing {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.status-badge--hit {
+  background-color: var(--success-subtle);
+  color: #065f46;
+  font-weight: 800;
+}
+
+.status-badge--miss {
+  background-color: var(--danger-subtle);
+  color: #991b1b;
+}
+
+.status-badge--paused {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+/* Responsive Telemetry Bar */
+@media (max-width: 1280px) {
+  .telemetry-bar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .telemetry-bar {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  .telemetry-val {
+    font-size: 0.95rem;
+  }
+}
+
+/* ==========================================================================
+   TABEL RIWAYAT EKSPERIMEN & LOG PRAKTIKUM
+   ========================================================================== */
+
+.experiment-history-section {
+  gap: 1rem;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.history-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.history-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.experiment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.825rem;
+  text-align: left;
+}
+
+.experiment-table caption {
+  caption-side: top;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+  padding: 0.4rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
+}
+
+.experiment-table th {
+  background-color: #f1f5f9;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.experiment-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.experiment-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.experiment-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.empty-table-cell {
+  text-align: center;
+  color: var(--text-subtle);
+  padding: 2rem 1rem !important;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   MODAL DIALOG (WAI-ARIA COMPLIANT & INLINE RESILIENT)
+   ========================================================================== */
+
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 1000;
+  padding: 1.25rem;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
 .modal-overlay.hidden {
   display: none;
+  opacity: 0;
 }
 
 .modal-container {
   background: #ffffff;
-  border-radius: var(--border-radius);
-  max-width: 520px;
-  width: 90%;
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-light);
+  animation: modalFadeIn 0.25s ease-out;
   overflow: hidden;
 }
 
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .modal-header {
-  padding: 1.25rem 1.5rem;
+  padding: 1.15rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
+}
+
+.modal-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.modal-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background-color: #0369a1;
+  color: #ffffff;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.modal-badge--accent {
+  background-color: var(--accent);
 }
 
 .modal-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
 }
 
 .modal-close-btn {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
+  line-height: 1;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-subtle);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  color: var(--danger);
 }
 
 .modal-body {
   padding: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.65;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.modal-body h4 {
   font-size: 0.95rem;
-  color: #334155;
-  line-height: 1.6;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 0.35rem;
+}
+
+.modal-list {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .modal-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-light);
   display: flex;
   justify-content: flex-end;
+  gap: 0.65rem;
+  background-color: var(--bg-surface);
+}
+
+/* Kartu Khusus Mode Tantangan */
+.challenge-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.challenge-target-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  background-color: var(--bg-primary);
+  padding: 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.challenge-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.challenge-stat-label {
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.challenge-stat-val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.challenge-tip {
+  font-size: 0.825rem;
+  background-color: var(--accent-subtle);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  color: #78350f;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  line-height: 1.5;
 }

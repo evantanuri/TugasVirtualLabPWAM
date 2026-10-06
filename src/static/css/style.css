@@ -1,72 +1,135 @@
 /* ==========================================================================
-   STYLE.CSS — Tema Visual Virtual Lab Fisika TPB ITB (Kinematika 2D)
-   Mengacu pada palet visual: Meriam Kayu Klasik, Lanskap Bukit & Benteng Teal
+   STYLE.CSS — Tema Visual & Layout Virtual Lab Fisika TPB ITB (Kinematika 2D)
+   Gaya Ilustrasi: Flat Medieval Artillery & Castle Siege Simulation
+   Sesuai Screenshot Referensi: Meriam Kayu Klasik, Bukit Sage/Teal, Benteng Teal
    ========================================================================== */
 
 :root {
-  /* Skema Warna Utama */
-  --bg-primary: #f0f4f8;
-  --bg-surface: #ffffff;
-  --bg-dark: #1e293b;
-
-  /* Warna Tematik Simulasi (Sesuai Screenshot Referensi) */
+  /* Skema Warna Flat Illustration (Sesuai Visual Referensi TPB ITB) */
   --sky-top: #e8eff5;
   --sky-bottom: #d6e2ed;
+  --hill-distant: #a8c5bc;
   --hill-front: #7fa89b;
-  --hill-back: #a8c5bc;
+  --meadow-turf: #4c8779;
+  --meadow-base: #3d7a6c;
+  --water-moat: #68b1bb;
+
+  /* Karakter Tematik Meriam & Benteng */
   --castle-teal: #1d5f6f;
   --castle-mortar: #134653;
+  --castle-highlight: #27798c;
   --wood-cannon: #8b5a2b;
-  --metal-cannon: #5a6577;
-  --smoke-color: rgba(230, 235, 240, 0.75);
+  --wood-rim: #5a3818;
+  --metal-cannon: #526071;
+  --metal-dark: #3a4452;
+  --smoke-color: rgba(240, 244, 248, 0.85);
   --explosion-yellow: #fde047;
   --explosion-orange: #f97316;
+  --explosion-red: #ef4444;
 
-  /* Warna Aksen UI */
+  /* Palet Aksen Antarmuka UI Modern */
   --primary: #0284c7;
   --primary-hover: #0369a1;
+  --primary-subtle: #e0f2fe;
   --accent: #d97706;
   --accent-hover: #b45309;
+  --accent-subtle: #fef3c7;
   --success: #10b981;
+  --success-hover: #059669;
+  --success-subtle: #d1fae5;
   --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --danger-subtle: #fee2e2;
 
-  /* Tipografi & Dimensi */
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --border-radius: 12px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* Netral & Permukaan */
+  --bg-primary: #edf2f7;
+  --bg-surface: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+  --border-color: #cbd5e1;
+  --border-light: #e2e8f0;
+
+  /* Glassmorphism Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.90);
+  --glass-border: rgba(226, 232, 240, 0.85);
+  --glass-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --glass-blur: blur(12px);
+
+  /* Dimensi, Radius & Transisi */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
 }
 
-* {
+/* ==========================================================================
+   CSS RESET & PONDASI
+   ========================================================================== */
+
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: var(--font-family);
   background-color: var(--bg-primary);
-  color: #334155;
+  color: var(--text-main);
   line-height: 1.5;
   min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Container Keseluruhan */
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
 }
 
-/* Header */
+/* ==========================================================================
+   HEADER SEMANTIK & BRANDING TPB ITB
+   ========================================================================== */
+
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--bg-surface);
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: var(--shadow-sm);
+  padding: 0.85rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-brand {
@@ -76,70 +139,249 @@ body {
 }
 
 .badge-tpb {
-  background-color: #0369a1;
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
   color: #ffffff;
-  padding: 0.25rem 0.75rem;
-  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  font-weight: 800;
   font-size: 0.85rem;
-  border-radius: 6px;
-  letter-spacing: 0.05em;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 4px rgba(2, 132, 199, 0.3);
+  flex-shrink: 0;
+}
+
+.header-title-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header h1 {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
-.header-actions {
+.header-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+  font-weight: 500;
+}
+
+.header-nav {
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.65rem;
 }
 
-/* Main Layout */
+/* ==========================================================================
+   TATA LETAK UTAMA: GRID RESPONSIVE
+   ========================================================================== */
+
 .lab-main {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) 390px;
   gap: 1.5rem;
   padding: 1.5rem 2rem;
   flex: 1;
+  max-width: 1780px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-@media (max-width: 1024px) {
-  .lab-main {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Viewport Section */
+/* Viewport Section (Kiri) */
 .viewport-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+/* Figure & Canvas Container */
+.canvas-container {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .canvas-wrapper {
   position: relative;
-  background-color: var(--sky-top);
-  border-radius: var(--border-radius);
+  background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--glass-shadow);
   aspect-ratio: 16 / 9;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-color);
+  touch-action: none;
 }
 
 #simCanvas {
   display: block;
   width: 100%;
   height: 100%;
+  image-rendering: auto;
 }
 
-/* Footer */
-.app-footer {
-  padding: 1rem 2rem;
-  background-color: var(--bg-surface);
-  border-top: 1px solid #e2e8f0;
+.canvas-caption {
+  font-size: 0.775rem;
+  color: var(--text-subtle);
   text-align: center;
+}
+
+/* Sidebar Kontrol (Kanan) */
+.control-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   FOOTER SEMANTIK
+   ========================================================================== */
+
+.app-footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+  padding: 1.25rem 2rem;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1780px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.footer-primary {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-muted);
+}
+
+.footer-secondary {
+  font-size: 0.775rem;
+  color: var(--text-subtle);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   1920×1080 (FHD Desktop), 1366×768 (Laptop), 390×844 (Mobile)
+   ========================================================================== */
+
+/* Laptop Standar & Layar Kompak (Tinggi Terbatas: <= 820px, Lebar >= 1025px) */
+@media (max-height: 820px) and (min-width: 1025px) {
+  .app-header {
+    padding: 0.6rem 1.5rem;
+  }
+  .app-header h1 {
+    font-size: 1.15rem;
+  }
+  .lab-main {
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+  .control-sidebar {
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    padding-right: 0.35rem;
+  }
+  .control-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .control-sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+  }
+  .panel-card {
+    padding: 1rem;
+  }
+}
+
+/* Layar Sedang & Tablet (<= 1140px) */
+@media (max-width: 1140px) {
+  .lab-main {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+  .control-sidebar {
+    width: 100%;
+  }
+  .app-header {
+    padding: 0.75rem 1.25rem;
+  }
+}
+
+/* Tablet Kecil & Smartphone (<= 768px) */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+  .header-brand {
+    justify-content: flex-start;
+  }
+  .header-nav {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .header-nav .btn {
+    flex: 1 1 auto;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+  }
+  .lab-main {
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+}
+
+/* Smartphone Ringkas (<= 480px, misal 390×844) */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+  .app-header {
+    padding: 0.65rem 0.75rem;
+  }
+  .badge-tpb {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  .app-header h1 {
+    font-size: 1.05rem;
+  }
+  .header-subtitle {
+    font-size: 0.75rem;
+  }
+  .header-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+  }
+  .header-nav .btn {
+    padding: 0.45rem 0.35rem;
+    font-size: 0.75rem;
+  }
+  .lab-main {
+    padding: 0.5rem;
+    gap: 0.85rem;
+  }
+  .panel-card {
+    padding: 0.85rem;
+    border-radius: var(--radius-md);
+  }
+  .canvas-wrapper {
+    border-radius: var(--radius-md);
+  }
+  .app-footer {
+    padding: 1rem 0.75rem;
+  }
 }
