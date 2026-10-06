@@ -1,0 +1,145 @@
+/* ==========================================================================
+   STYLE.CSS — Tema Visual Virtual Lab Fisika TPB ITB (Kinematika 2D)
+   Mengacu pada palet visual: Meriam Kayu Klasik, Lanskap Bukit & Benteng Teal
+   ========================================================================== */
+
+:root {
+  /* Skema Warna Utama */
+  --bg-primary: #f0f4f8;
+  --bg-surface: #ffffff;
+  --bg-dark: #1e293b;
+
+  /* Warna Tematik Simulasi (Sesuai Screenshot Referensi) */
+  --sky-top: #e8eff5;
+  --sky-bottom: #d6e2ed;
+  --hill-front: #7fa89b;
+  --hill-back: #a8c5bc;
+  --castle-teal: #1d5f6f;
+  --castle-mortar: #134653;
+  --wood-cannon: #8b5a2b;
+  --metal-cannon: #5a6577;
+  --smoke-color: rgba(230, 235, 240, 0.75);
+  --explosion-yellow: #fde047;
+  --explosion-orange: #f97316;
+
+  /* Warna Aksen UI */
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --accent: #d97706;
+  --accent-hover: #b45309;
+  --success: #10b981;
+  --danger: #ef4444;
+
+  /* Tipografi & Dimensi */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --border-radius: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: #334155;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.badge-tpb {
+  background-color: #0369a1;
+  color: #ffffff;
+  padding: 0.25rem 0.75rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.app-header h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Main Layout */
+.lab-main {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  flex: 1;
+}
+
+@media (max-width: 1024px) {
+  .lab-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Viewport Section */
+.viewport-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.canvas-wrapper {
+  position: relative;
+  background-color: var(--sky-top);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  aspect-ratio: 16 / 9;
+  border: 1px solid #cbd5e1;
+}
+
+#simCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Footer */
+.app-footer {
+  padding: 1rem 2rem;
+  background-color: var(--bg-surface);
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+}
